@@ -50,8 +50,8 @@ public class SneakerTest {
 
     @Test
     public void findSneaker() {
-        Sneaker sneaker = SneakerService.create("Jogger", "Adidas", "Run", 10.5f, 1, 115);
-        int id = SneakerService.getNextId();
+       Sneaker sneaker =  SneakerService.create("Jogger", "Adidas", "Run", 10.5f, 1, 115);
+        int id = sneaker.getId();
         int expected = 1;
         Assert.assertEquals(expected, id);
     }

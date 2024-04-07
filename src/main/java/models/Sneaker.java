@@ -2,6 +2,7 @@ package models;
 
 import services.SneakerService;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 public class Sneaker {
@@ -98,22 +99,56 @@ public class Sneaker {
     //read
     public Sneaker findSneaker(int id) {
         // should take an int and return an object with that id, if exists
-        return sneakerService.getInventory().get(id);
+        boolean flag = true;
+        Sneaker sn = null;
+        for (Sneaker s:SneakerService.getInventory()){
+            if(s.getId() == id){
+                System.out.println(s.toString());
+                sn = s;
+                flag = false;
+                break;
+            }
+        }
+        if(flag) {
+            System.out.println(ColorEnum.RED.formatString("Product not found in the inventory!"));
+        }
+        return sn;
     }
 
     //read all
     public Sneaker[] findAll() {
         // should return a basic array copy of the ArrayList
-        return sneakerService.getInventory().toArray(new Sneaker[0]);
+        return SneakerService.getInventory().toArray(new Sneaker[0]);
     }
 
     //delete
     public boolean delete(int id) {
         // should remove the object with this id from the ArrayList if exits and return true.
         // Otherwise return false
-        sneakerService.getInventory().remove(id);
-        return sneakerService.getInventory().contains(id)?true:false;
+        boolean flag = true;
+        for (Sneaker s:SneakerService.getInventory()){
+            if(s.getId() == id){
+                SneakerService.getInventory().remove(s);
+                flag = false;
+                System.out.println("Product ID "+s.getId()+" removed from inventory list");
+                break;
+            }
+        }
+        if(flag) {
+            System.out.println(ColorEnum.RED.formatString("Product not found in the inventory!"));
+        }
+
+        try {
+            SneakerService.removeDataToCsv(id);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return flag;
     }
 
-
+    @Override
+    public String toString() {
+        return "ID 🟰 "+getId() + " \nProduct Name 🟰 " + getName() + " \nBrand Name 🟰 " + getBrand() + " \nSport 🟰 "
+                +getSport()+" \nSize 🟰 "+getSize()+" \nQuantity 🟰 "+getQty() + " \nPrice 🟰 "+getPrice();
+    }
 }
