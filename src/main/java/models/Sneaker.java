@@ -103,7 +103,7 @@ public class Sneaker {
         Sneaker sn = null;
         for (Sneaker s:SneakerService.getInventory()){
             if(s.getId() == id){
-                System.out.println(s.toString());
+                //System.out.println(s.toString());
                 sn = s;
                 flag = false;
                 break;
@@ -138,11 +138,6 @@ public class Sneaker {
             System.out.println(ColorEnum.RED.formatString("Product not found in the inventory!"));
         }
 
-        try {
-            SneakerService.removeDataToCsv(id);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
         return flag;
     }
 

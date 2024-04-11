@@ -20,15 +20,11 @@ public class SneakerService {
         public  static Sneaker create(String name, String brand,String sport,float size,int qty,float price){
             Sneaker createdSneaker =  new Sneaker(nextId,name,brand,sport,size,qty,price);
             inventory.add(createdSneaker);
-            try{
-                savaDataToCsv();
-            }
-            catch (IOException e){
-                System.out.println(e.getMessage());
-            }
             nextId++;
             return createdSneaker;
         }
+
+
 
         public Sneaker find(Sneaker sneaker){
             return inventory.get(nextId);
@@ -46,7 +42,7 @@ public class SneakerService {
 
     public  static void  savaDataToCsv() throws IOException {
         String csvFile = "/Users/asan/Desktop/Projects/Product-Inventory-Lab/src/main/java/services/Sneaker.csv";
-        FileWriter writer = new FileWriter(csvFile,true); //(1)
+        FileWriter writer = new FileWriter(csvFile); //(1)
 
         CSVUtils.writeLine(writer, new ArrayList<>(Arrays.asList(String.valueOf(nextId))));  // (2)
 
@@ -66,31 +62,32 @@ public class SneakerService {
         writer.close();
     }
 
-    private static void loadData(){
+
+
+    public static void loadData(){
         // (1)
-        String csvFile = "/Users/asan/Desktop/Projects/Product-Inventory-Lab/src/main/java/services/Sneaker.csv";
+        String csvFile = "src/main/java/services/Sneaker.csv";
         String line = "";
         String csvSplitBy = ",";
 
         // (2)
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-            if(br.readLine() !=null){
-                nextId = Integer.parseInt(br.readLine());  // (3)
-                while ((line = br.readLine()) != null) {
-                    // split line with comma
-                    String[] beer = line.split(csvSplitBy);
+            nextId = Integer.parseInt(br.readLine());  // (3)
 
-                    // (4)
-                    int id = Integer.parseInt(beer[0]);
-                    String name = beer[1];
-                    String brand = beer[2];
-                    String sport = beer[3];
-                    int qty = Integer.parseInt(beer[4]);
-                    float price = Float.parseFloat(beer[5]);
+            while ((line = br.readLine()) != null) {
+                // split line with comma
+                String[] beer = line.split(csvSplitBy);
 
-                    // (5)
-                    inventory.add(new Sneaker(id, name, brand, sport, qty, price));
-                }
+                // (4)
+                int id = Integer.parseInt(beer[0]);
+                String name = beer[1];
+                String brand = beer[2];
+                String sport = beer[3];
+                int qty = Integer.parseInt(beer[4]);
+                float price = Float.parseFloat(beer[5]);
+
+                // (5)
+                inventory.add(new Sneaker(id, name, brand, sport, qty, price));
             }
         } catch (IOException e) {
             e.printStackTrace();

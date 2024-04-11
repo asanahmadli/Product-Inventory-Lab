@@ -4,6 +4,7 @@ package models;
 import services.SneakerService;
 
 import java.awt.*;
+import java.io.IOException;
 import java.sql.SQLOutput;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -11,7 +12,7 @@ import java.util.Scanner;
 public class App  {
     private SneakerService sneakerService = new SneakerService(); // (1)
     Scanner scanner = new Scanner(System.in);
-    Sneaker sneaker = new Sneaker();
+     private Sneaker sneaker = new Sneaker();
 
     public static void main(String[] args) {
 
@@ -24,7 +25,9 @@ public class App  {
 
 
     public void init(){
+        SneakerService.loadData();
         Console.printWelcome();
+
         // (4)
         // application logic here
         // call methods to take user input and interface with services
@@ -41,6 +44,11 @@ public class App  {
 
             if(menu.equalsIgnoreCase("Create")){
                 add();
+                try {
+                    SneakerService.savaDataToCsv();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
             else if(menu.equalsIgnoreCase("Read")){
                 System.out.println("Please enter product ID:");
@@ -96,7 +104,7 @@ public class App  {
         int qty = scanner.nextInt();
         System.out.println("Please enter product price:");
         float price = scanner.nextFloat();
-        Sneaker sneaker = SneakerService.create(name,brand,sport,size,qty,price);
+        sneaker = SneakerService.create(name,brand,sport,size,qty,price);
         System.out.println("Product created and product ID: " + sneaker.getId());
     }
 
@@ -152,6 +160,7 @@ public class App  {
 
             }
         }
+
     }
 
     public void read(int id){
